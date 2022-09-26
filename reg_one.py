@@ -1,5 +1,6 @@
 import pprint as pp
 import re
+from class_class import MyRef
 sample_text = """
 [27] Ming Tan et al. “Out-of-Domain Detection for Low-Resource Text Classification Tasks”. In:
 Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP- IJCNLP). 2019, pp. 3557–3563.
@@ -68,12 +69,44 @@ sample = re.compile(r'in:', re.I)
 print(sample.findall(sample_text))
 
 
+### all author instances exist within the dot
+sample_instance = ref_dict['27'] # take out the first one and apply author extraction
+# splitting by punctutation acts as a surprisingly sufficient initial separator
+sample_instance.split(".")
+authorRegex = re.compile('\[\d+\]([^.]+)') # this reads everything after the bracket, upt to the dot ?
+author = authorRegex.findall(sample_instance)
+print(author[0].strip())
+
+# a class to hold our variables
+refs_class = MyRef()
+refs_class.author = author[0].strip()
+
+# that extracts a single author just fine, next extract the title
+print(sample_instance.split("."))
+titleRegex = re.compile('\“([^”]+)')
+title = titleRegex.findall(sample_instance)
+## adding out newly made title to the class
+refs_class.title = title[0]
+
+# extraact the conference name
+# TOOD -- extract the conference title
+#confTitle = re.compile()
+
+
+print(refs_class)
+
+
+
 '''
 # TODO :
 1. update print statements to logging statements
 2. Update regex to create to further divide text into author/ title/ conference/ pub year / pages
+2a. finish extracting above then turn it into a verbose extraction
+2b. use the hand crafted one to write tests
+2c. expand the approach to encompass all aspects of the document.
+
 3. Create a class to hold all information
 3a. Neaten code by adhering to PEP8 as well as dividing into separate calling and methods class
 4. Update with assert statements to make sure that everything is going in as it should
-5. expand code to take pages in over saved text 
+5. expand code to take pages in over saved text
 '''
